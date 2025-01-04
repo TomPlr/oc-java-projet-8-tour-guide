@@ -16,6 +16,7 @@ import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class TourGuideController {
@@ -37,13 +38,13 @@ public class TourGuideController {
     }
 
     @RequestMapping("/getLocation")
-    public VisitedLocation getLocation(@RequestParam String userName) {
+    public VisitedLocation getLocation(@RequestParam String userName)   {
         return tourGuideService.getUserLocation(getUser(userName));
     }
 
 
     @RequestMapping("/getNearbyAttractions")
-    public String getNearbyAttractions(@RequestParam String userName) {
+    public String getNearbyAttractions(@RequestParam String userName)   {
         VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
 
         List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
