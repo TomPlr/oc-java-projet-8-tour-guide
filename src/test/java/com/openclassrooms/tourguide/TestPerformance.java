@@ -8,9 +8,7 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import org.apache.commons.lang3.time.StopWatch;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 import rewardCentral.RewardCentral;
 
 import java.util.ArrayList;
@@ -47,19 +45,16 @@ public class TestPerformance {
      * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
      */
 
-    @Disabled
-    @ParameterizedTest
-    @ValueSource(ints = {100, 1000, 5000, 10000, 50000, 100000})
-    public void highVolumeTrackLocation(int userNumber) {
+    @Test
+    public void highVolumeTrackLocation() {
+        InternalTestHelper.setInternalUserNumber(100_000);
+
         GpsUtil gpsUtil = new GpsUtil();
         RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-        // Users should be incremented up to 100,000, and test finishes within 15
-        // minutes
-        InternalTestHelper.setInternalUserNumber(userNumber);
+
         TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
-        List<User> allUsers = new ArrayList<>();
-        allUsers = tourGuideService.getAllUsers();
+        List<User> allUsers = tourGuideService.getAllUsers();
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -76,24 +71,21 @@ public class TestPerformance {
         assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
     }
 
-    @Disabled
-    @ParameterizedTest
-    @ValueSource(ints = {100, 1000, 5000, 10000, 50000, 100000})
-    public void highVolumeGetRewards(int userNumber) {
+    @Test
+    public void highVolumeGetRewards() {
+        InternalTestHelper.setInternalUserNumber(100_000);
+
         GpsUtil gpsUtil = new GpsUtil();
         RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-        // Users should be incremented up to 100,000, and test finishes within 20
-        // minutes
-        InternalTestHelper.setInternalUserNumber(userNumber);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
         Attraction attraction = gpsUtil.getAttractions().get(0);
-        List<User> allUsers = new ArrayList<>();
-        allUsers = tourGuideService.getAllUsers();
+
+        List<User> allUsers = tourGuideService.getAllUsers();
 
         allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 

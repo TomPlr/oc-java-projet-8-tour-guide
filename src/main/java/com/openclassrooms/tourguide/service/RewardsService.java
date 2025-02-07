@@ -37,10 +37,6 @@ public class RewardsService {
         this.rewardsCentral = rewardCentral;
     }
 
-    public void setDefaultProximityBuffer() {
-        proximityBuffer = defaultProximityBuffer;
-    }
-
     public CompletableFuture<Void> calculateRewards(User user) {
         return CompletableFuture.supplyAsync(() -> {
             CopyOnWriteArrayList<VisitedLocation> userLocations = new CopyOnWriteArrayList<>(user.getVisitedLocations());
